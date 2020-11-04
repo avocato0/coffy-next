@@ -1,12 +1,9 @@
-import Head from 'next/head'
-import Navbar from '../components/Navbar'
-import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import AuthService from 'services/auth'
 
-AuthService.add('test@global.meow', 'crash137')
+import Head from 'next/head'
+import 'styles/globals.scss'
 
-function MyApp({ Component, pageProps }: AppProps) {
+export default function MyApp({ Component, pageProps }: AppProps) {
 	return (
 		<>
 			<Head>
@@ -14,12 +11,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
-			<Navbar />
-			<main>
-				<Component {...pageProps} />
-			</main>
+			<Component {...pageProps} />
 		</>
 	)
 }
-
-export default MyApp
