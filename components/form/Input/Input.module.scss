@@ -1,3 +1,9 @@
 .Component {
 	display: block;
+	width: 100%;
+	font-size: inherit;
+	padding: 0.5rem;
+	border: 1px solid var(--color-gray-10);
+	border-radius: 0.5rem;
+	padding: 1rem;
 }

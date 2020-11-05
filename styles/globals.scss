@@ -1,16 +1,39 @@
-html,
+@import './variables.scss';
+
+#__next {
+	height: 100%;
+}
+
+html {
+	font-size: 8px;
+	height: 100%;
+}
+
 body {
 	padding: 0;
 	margin: 0;
 	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial,
 		sans-serif, Apple Color Emoji, Segoe UI Emoji;
+	height: 100%;
+
+	font-size: 1.75rem;
+	color: var(--color-text);
+	background-image: linear-gradient(
+		to right bottom,
+		rgba(#9c27b0, 0.05),
+		rgba(#03a9f4, 0.05)
+	);
 }
 
 a {
-	color: violet;
+	color: var(--color-main);
 	text-decoration: none;
 }
 
 * {
 	box-sizing: border-box;
+
+	&:focus {
+		outline: none;
+	}
 }

@@ -1,9 +1,9 @@
-import { Button, Label, Container } from 'components'
+import { Button, Label, Container, Form } from 'components'
 
 const SignIn = () => {
 	return (
 		<Container>
-			<form>
+			<Form>
 				<Label
 					title='Почта'
 					input={{
@@ -18,7 +18,7 @@ const SignIn = () => {
 					}}
 				/>
 				<Button value='Авторизоваться' />
-			</form>
+			</Form>
 		</Container>
 	)
 }

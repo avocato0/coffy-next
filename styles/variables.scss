@@ -1,0 +1,20 @@
+:root {
+	// Colors
+	--color-pink: #f759ab;
+	--color-blue: #6d71f9;
+	--color-violet: #9c27b0;
+
+	--color-white: #ffffff;
+	--color-black: #0d0c22;
+	--color-gray-10: #0d0c2222;
+
+	// Main
+	--color-main: var(--color-blue);
+
+	// Text
+	--color-text: var(--color-black);
+	--color-text-second: var(--color-grey);
+
+	// Container
+	--color-container-bg: var(--color-white);
+}
