@@ -1,4 +1,5 @@
-const { Pool } = require('pg')
+import { IUserAuth, IUserDB } from 'models/user'
+import { Pool } from 'pg'
 
 const pool = new Pool()
 
@@ -9,8 +10,7 @@ pool.on('error', (err: Error) => {
 ;(async () => {
 	const client = await pool.connect()
 	try {
-		const res = await client.query('SELECT * FROM users')
-		console.table(res.rows)
+		// console.table((await client.query('SELECT * FROM users')).rows)
 	} finally {
 		client.release()
 	}
@@ -18,10 +18,17 @@ pool.on('error', (err: Error) => {
 
 export default {
 	query: {
-		async user(id: number) {
+		async userById(user: IUserDB): Promise<IUserDB> {
 			const result = await pool.query(
 				'SELECT * FROM users WHERE id = $1',
-				[id]
+				[user.id]
+			)
+			return result.rows[0]
+		},
+		async userByEmail(user: IUserAuth): Promise<IUserDB> {
+			const result = await pool.query(
+				'SELECT * FROM users WHERE email = $1',
+				[user.email]
 			)
 			return result.rows[0]
 		},

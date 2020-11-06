@@ -18,10 +18,5 @@ export const LoginMessage = {
 	REQUIRED_FIELD: `Поле обязательно для заполнения`,
 }
 
-export const Template = {
-	LOGIN_PAGE: `login`,
-	REGISTER_PAGE: `register`,
-}
-
 export const MIN_PASSWORD_LENGTH = 6
 export const MAX_PASSWORD_LENGTH = 12

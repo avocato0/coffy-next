@@ -38,4 +38,9 @@
 			width: calc(100% + 1.5rem);
 		}
 	}
+
+	&:disabled {
+		pointer-events: none;
+		background-color: var(--color-gray-10);
+	}
 }

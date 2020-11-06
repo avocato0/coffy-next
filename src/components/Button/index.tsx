@@ -8,11 +8,13 @@ export interface IButtonProps
 export const Button: React.FC<IButtonProps> = ({
 	type = 'button',
 	value = '',
+	...args
 }) => {
 	const [clicked, setClicked] = useState<boolean>()
 
 	return (
 		<button
+			{...args}
 			className={cl(styles.Component, {
 				[styles.ComponentActive]: clicked,
 			})}

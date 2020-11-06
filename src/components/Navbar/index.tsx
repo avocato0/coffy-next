@@ -1,15 +1,19 @@
+import { Observer, observer, useLocalObservable } from 'mobx-react-lite'
 import Link from 'next/link'
-import styles from './index.module.scss'
+import { useStore } from 'store'
+import styles from './Navbar.module.scss'
 
 const navList = [
 	{ title: 'Home', link: '/' },
-	{ title: 'Auth', link: '/auth' },
+	{ title: 'SignIn', link: '/auth/signin' },
 	// { title: 'User', link: '/user' },
 ]
 
 const Navbar = () => {
+	const store = useStore()
+
 	return (
-		<section className={styles.container}>
+		<section className={styles.Container}>
 			<nav>
 				<ul>
 					{navList.map(({ title, link }) => {
@@ -23,6 +27,7 @@ const Navbar = () => {
 					})}
 				</ul>
 			</nav>
+			{store.user.name}
 		</section>
 	)
 }
