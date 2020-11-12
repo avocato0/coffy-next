@@ -9,6 +9,7 @@
 		"sync": "git add . && git commit -m Update && git push"
 	},
 	"dependencies": {
+		"@fingerprintjs/fingerprintjs": "^3.0.3",
 		"bcryptjs": "^2.4.3",
 		"classnames": "^2.2.6",
 		"http-status-codes": "^2.1.4",

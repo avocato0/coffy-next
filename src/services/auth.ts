@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs'
-import type { IUserAuth } from 'models/user'
+import type { ITokens, IUserAuth } from 'models/user'
 import jwt from 'jsonwebtoken'
 import {
 	JWT_ACCESS_SECRET,
@@ -8,11 +8,7 @@ import {
 } from 'constants/auth'
 import db from 'db'
 import { copyWithoutProps } from 'utils/helpers'
-
-export interface ITokens {
-	accessToken: string
-	refreshToken: string
-}
+import { ApiError } from 'errors/api'
 
 class AuthService {
 	private refrshTokens: ITokens['refreshToken'][] = []
@@ -56,10 +52,10 @@ class AuthService {
 
 	async signin(user: IUserAuth) {
 		const dbUser = await db.query.userByEmail(user)
-		if (!dbUser) throw new Error(LoginMessage.USER_NOT_EXISTS)
+		if (!dbUser) throw new ApiError(LoginMessage.USER_NOT_EXISTS)
 
 		const compare = await bcrypt.compare(user.password, dbUser.password)
-		if (!compare) throw new Error(LoginMessage.WRONG_PASSWORD)
+		if (!compare) throw new ApiError(LoginMessage.WRONG_PASSWORD)
 
 		const tokens = this.makeToken({ id: dbUser.id })
 		this.addRefreshToken(tokens.refreshToken)

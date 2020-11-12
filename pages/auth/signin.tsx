@@ -1,11 +1,10 @@
 import { Button, Label, Container, Form } from 'components'
 import { observer } from 'mobx-react-lite'
+import { IApiAuth } from 'models/api'
 import { IUserAuth } from 'models/user'
 import { useContext, useState } from 'react'
 import { StoreContext } from 'store'
-
-const fetcher = (input: RequestInfo, init?: RequestInit) =>
-	fetch(input, init).then((res) => res.json())
+import { fetcher } from 'utils/api'
 
 const SignIn = observer(() => {
 	const [email, setEmail] = useState<string>('0.snilcy@gmail.com')
@@ -20,18 +19,12 @@ const SignIn = observer(() => {
 				onSubmit={async (evt) => {
 					evt.preventDefault()
 					const user: IUserAuth = { email, password }
+					const response = await fetcher<IApiAuth>(
+						'/api/auth/signin',
+						user
+					)
 
-					const response = await fetcher('/api/auth/signin', {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json',
-						},
-						body: JSON.stringify(user),
-					})
-
-					console.log(response)
 					if (response.data) {
-						// TODO Add respons type
 						store.setUser(response.data.user)
 						store.setTokens(response.data.tokens)
 					}
