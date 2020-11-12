@@ -1,11 +1,13 @@
+import { observe, runInAction, set, toJS } from 'mobx'
 import {
 	enableStaticRendering,
 	useLocalObservable,
-	Observer,
+	observer,
 } from 'mobx-react-lite'
-import { IUserDB } from 'models/user'
-import { createContext, FC, ReactElement, useContext } from 'react'
+import { createContext, FC, useContext, useEffect } from 'react'
 import initial from './initial'
+import storage from './storage'
+import DevTools from 'components/DevTools'
 
 enableStaticRendering(typeof window === 'undefined')
 
@@ -17,12 +19,22 @@ export const StoreContext = createContext<IStore>()
 export const InjectStoreContext: FC<{}> = ({ children }) => {
 	const store = useLocalObservable<IStore>(initial)
 
+	useEffect(() => {
+		runInAction(() => set(store, storage.store || {}))
+		DevTools.init(store)
+	}, [])
+
+	observe(store, (change) => {
+		if (change.type === 'update') {
+			storage.update(change.object)
+		}
+	})
+
 	return (
 		<StoreContext.Provider value={store}>{children}</StoreContext.Provider>
 	)
 }
 
-export const useStore = (component: ReactElement) => {
-	const store = useContext(StoreContext)
-	return <Observer>{component}</Observer>
-}
+export const useStore = () => useContext(StoreContext)
+
+export { observer, initial }

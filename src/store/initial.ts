@@ -1,9 +1,9 @@
 import { IUserDB } from 'models/user'
 import { ITokens } from 'services/auth'
+import storage from './storage'
 
 const createStore = () => ({
 	// User
-
 	user: {
 		name: 'Unknow',
 	} as IUserDB,

@@ -8,9 +8,9 @@ const fetcher = (input: RequestInfo, init?: RequestInit) =>
 	fetch(input, init).then((res) => res.json())
 
 const SignIn = observer(() => {
-	const [email, setEmail] = useState<string>('')
-	const [password, setPassword] = useState<string>('')
-	const [inValid, setValid] = useState<boolean>(true)
+	const [email, setEmail] = useState<string>('0.snilcy@gmail.com')
+	const [password, setPassword] = useState<string>('123456')
+	const [inValid, setValid] = useState<boolean>(!(email && password))
 
 	const store = useContext(StoreContext)
 

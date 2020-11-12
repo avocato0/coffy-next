@@ -1,6 +1,6 @@
-import { Observer, observer, useLocalObservable } from 'mobx-react-lite'
 import Link from 'next/link'
-import { useStore } from 'store'
+import { useEffect } from 'react'
+import { useStore, observer } from 'store'
 import styles from './Navbar.module.scss'
 
 const navList = [
@@ -9,9 +9,8 @@ const navList = [
 	// { title: 'User', link: '/user' },
 ]
 
-const Navbar = () => {
+const Navbar = observer(() => {
 	const store = useStore()
-
 	return (
 		<section className={styles.Container}>
 			<nav>
@@ -30,6 +29,6 @@ const Navbar = () => {
 			{store.user.name}
 		</section>
 	)
-}
+})
 
 export default Navbar
