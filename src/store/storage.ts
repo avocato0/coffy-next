@@ -1,22 +1,26 @@
+interface IStore {
+	tokens?: {
+		accessToken: string
+		refreshToken: string
+	}
+}
+
 class Storage {
-	private STORAGE_KEY = '__STATE__'
+	private data: IStore = {}
 
 	update(newValue: object) {
-		localStorage.setItem(
-			this.STORAGE_KEY,
-			JSON.stringify(Object.assign({}, this.store, newValue))
-		)
+		this.data = {
+			...this.data,
+			...newValue,
+		}
 	}
 
 	get store() {
-		try {
-			let store = localStorage.getItem(this.STORAGE_KEY)
-			if (store) return JSON.parse(store)
-		} catch (err) {
-			console.error(err.message)
-		}
+		return this.data
+	}
 
-		return null
+	clear() {
+		this.data = {}
 	}
 }
 

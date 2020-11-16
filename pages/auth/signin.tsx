@@ -25,8 +25,7 @@ const SignIn = observer(() => {
 					)
 
 					if (response.data) {
-						store.setUser(response.data.user)
-						store.setTokens(response.data.tokens)
+						store.setTokens(response.data)
 					}
 				}}>
 				<Label

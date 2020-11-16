@@ -12,10 +12,15 @@ export const RegisterMessage = {
 }
 
 export const LoginMessage = {
+	USERID_NOT_EXISTS: `Пользователь не найден`,
 	USER_NOT_EXISTS: `Пользователь с таким email не зарегистрирован`,
 	WRONG_PASSWORD: `Неправильно введён логин или пароль`,
 	WRONG_EMAIL: `Неправильный email`,
 	REQUIRED_FIELD: `Поле обязательно для заполнения`,
+}
+
+export const AuthMessage = {
+	UNAUTHORIZED: `Не авторизован`,
 }
 
 export const MIN_PASSWORD_LENGTH = 6

@@ -1,6 +1,7 @@
+import User from 'components/User'
 import Link from 'next/link'
-import { useEffect } from 'react'
-import { useStore, observer } from 'store'
+import useSWR from 'swr'
+import { fetcher } from 'utils/api'
 import styles from './Navbar.module.scss'
 
 const navList = [
@@ -9,8 +10,10 @@ const navList = [
 	// { title: 'User', link: '/user' },
 ]
 
-const Navbar = observer(() => {
-	const store = useStore()
+const Navbar = () => {
+	// const response = useSWR('/api/me', fetcher)
+	// console.log(response.data)
+
 	return (
 		<section className={styles.Container}>
 			<nav>
@@ -26,9 +29,9 @@ const Navbar = observer(() => {
 					})}
 				</ul>
 			</nav>
-			{store.user.name}
+			<User />
 		</section>
 	)
-})
+}
 
 export default Navbar

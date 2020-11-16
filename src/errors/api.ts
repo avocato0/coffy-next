@@ -1,3 +1,4 @@
+import { AuthMessage } from 'constants/auth'
 import httpStatus from 'http-status-codes'
 
 export class ApiError extends Error {
@@ -10,3 +11,6 @@ export class ApiError extends Error {
 		this.status = status
 	}
 }
+
+export const UnauthApiError = () =>
+	new ApiError(AuthMessage.UNAUTHORIZED, httpStatus.UNAUTHORIZED)

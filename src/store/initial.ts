@@ -1,6 +1,4 @@
-import { IUserDB } from 'models/user'
-import { ITokens } from 'services/auth'
-import storage from './storage'
+import { ITokens, IUserDB } from 'models/user'
 
 const createStore = () => ({
 	// User

@@ -1,19 +1,17 @@
+import { LoginMessage } from 'constants/auth'
 import db from 'db'
-import { NextApiRequest, NextApiResponse } from 'next'
+import { ApiError } from 'errors/api'
+import { getHandler } from 'utils/api'
+import { copyWithoutProps } from 'utils/helpers'
 
-export default async function handler(
-	req: NextApiRequest,
-	res: NextApiResponse
-) {
-	const {
-		query: { id },
-	} = req
+export default getHandler(async ({ query }) => {
+	const user = await db.query.userById(query.id as string)
 
-	const user = await db.query.user(+id)
+	if (!user)
+		throw new ApiError(
+			LoginMessage.USERID_NOT_EXISTS,
+			ApiError.status.BAD_REQUEST
+		)
 
-	if (user) {
-		return res.end(JSON.stringify(user, null, '\t'))
-	}
-
-	res.status(404).end('Not found')
-}
+	return copyWithoutProps(user, 'password')
+})

@@ -11,7 +11,7 @@ import DevTools from 'components/DevTools'
 
 enableStaticRendering(typeof window === 'undefined')
 
-type IStore = ReturnType<typeof initial>
+export type IStore = ReturnType<typeof initial>
 
 // @ts-ignore
 export const StoreContext = createContext<IStore>()

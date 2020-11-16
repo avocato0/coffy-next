@@ -18,10 +18,10 @@ pool.on('error', (err: Error) => {
 
 export default {
 	query: {
-		async userById(user: IUserDB): Promise<IUserDB> {
+		async userById(id: string): Promise<IUserDB> {
 			const result = await pool.query(
 				'SELECT * FROM users WHERE id = $1',
-				[user.id]
+				[id]
 			)
 			return result.rows[0]
 		},

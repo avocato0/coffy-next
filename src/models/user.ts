@@ -9,7 +9,7 @@ export interface IUserDB {
 	name: string
 	birth_date?: Date
 	company?: number
-	readonly password?: string
+	readonly password: string
 }
 
 export interface ITokens {

@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs'
-import type { ITokens, IUserAuth } from 'models/user'
+import type { ITokens, IUserAuth, IUserDB } from 'models/user'
 import jwt from 'jsonwebtoken'
 import {
 	JWT_ACCESS_SECRET,
@@ -7,42 +7,18 @@ import {
 	LoginMessage,
 } from 'constants/auth'
 import db from 'db'
+import { ApiError, UnauthApiError } from 'errors/api'
+import refreshTokenService from './token'
 import { copyWithoutProps } from 'utils/helpers'
-import { ApiError } from 'errors/api'
+
+interface IPayload {
+	id: string
+}
 
 class AuthService {
-	private refrshTokens: ITokens['refreshToken'][] = []
-
-	async add(username: string, password: string) {
-		const hash = await bcrypt.hash(password, 10)
-
-		// this.store[id] = {
-		// 	username,
-		// 	password: hash,
-		// }
-
-		// console.log(this.store)
-	}
-
-	async checkUser(user: IUserAuth, password: string) {
-		return await bcrypt.compare(user.password, password)
-	}
-
-	addRefreshToken(token: string) {
-		this.refrshTokens.push(token)
-	}
-
-	refreshTokenExist(token: string) {
-		return ~this.refrshTokens.indexOf(token)
-	}
-
-	dropRefreshToken(token: string) {
-		this.refrshTokens = this.refrshTokens.filter((el) => token !== el)
-	}
-
 	makeToken(data: string | Buffer | object): ITokens {
 		const accessToken = jwt.sign(data, JWT_ACCESS_SECRET, {
-			expiresIn: `10s`,
+			expiresIn: process.env.TOKEN_EXPIRED,
 		})
 
 		const refreshToken = jwt.sign(data, JWT_REFRESH_SECRET)
@@ -58,12 +34,31 @@ class AuthService {
 		if (!compare) throw new ApiError(LoginMessage.WRONG_PASSWORD)
 
 		const tokens = this.makeToken({ id: dbUser.id })
-		this.addRefreshToken(tokens.refreshToken)
+		refreshTokenService.add(tokens.refreshToken)
 
-		return {
-			user: copyWithoutProps(dbUser, 'password'),
-			tokens,
-		}
+		return tokens
+	}
+
+	async verify(accessToken: ITokens['accessToken']): Promise<IPayload> {
+		const payload = jwt.verify(accessToken, JWT_ACCESS_SECRET) as IPayload
+
+		// const userId = payload.id
+		// const user = await db.query.userById(userId)
+
+		return copyWithoutProps(payload, 'iat', 'exp')
+	}
+
+	updateTokens(refreshToken: ITokens['refreshToken']): ITokens {
+		const exist = refreshTokenService.exist(refreshToken)
+		if (!exist) throw UnauthApiError()
+
+		const payload = jwt.verify(refreshToken, JWT_REFRESH_SECRET) as IPayload
+		const tokens = this.makeToken({ id: payload.id })
+
+		refreshTokenService.drop(refreshToken)
+		refreshTokenService.add(tokens.refreshToken)
+
+		return tokens
 	}
 }
 
