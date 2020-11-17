@@ -15,15 +15,12 @@ describe('Authentication Service', () => {
 		})
 
 		test('Must generate Error for invalid user', async () => {
-			try {
-				await AuthService.signin({
+			expect(
+				AuthService.signin({
 					email: user.email,
 					password: 'wrong',
 				})
-			} catch (err) {
-				expect(err.name).toBe('AuthError')
-				expect(err.message).toBe(Constant.SignInMessage.WRONG_PASSWORD)
-			}
+			).rejects.toThrowError(Constant.SignInMessage.WRONG_PASSWORD)
 		})
 	})
 
@@ -36,25 +33,34 @@ describe('Authentication Service', () => {
 		})
 
 		test('Must generate Error for invalid token', async () => {
-			try {
-				await AuthService.verify('wrong')
-			} catch (err) {
-				expect(err.name).toBe('AuthError')
-				expect(err.message).toBe(Constant.VerifyMessage.FORBIDDEN)
-			}
+			expect(AuthService.verify('wrong')).rejects.toThrowError(
+				Constant.VerifyMessage.UNAUTHORIZED
+			)
 		})
 
-		test.only('Must generate Error for expired token', async () => {
+		test('Must generate Error for expired token', async () => {
 			process.env.TOKEN_EXPIRED = '0'
 			const tokens = await AuthService.signin(user)
 
-			const payload = await AuthService.verify(tokens.accessToken)
-			console.log(payload)
-			// try {
-			// } catch (err) {
-			// 	expect(err.name).toBe('AuthError')
-			// 	expect(err.message).toBe(Constant.VerifyMessage.FORBIDDEN)
-			// }
+			expect(AuthService.verify(tokens.accessToken)).rejects.toThrowError(
+				Constant.VerifyMessage.UNAUTHORIZED
+			)
+		})
+	})
+
+	describe('Update', () => {
+		test('Must generate new tokens from valid refresh token', async () => {
+			const tokens = await AuthService.signin(user)
+			const newTokens = AuthService.updateTokens(tokens.refreshToken)
+
+			expect(newTokens.accessToken).toBeDefined()
+			expect(newTokens.refreshToken).toBeDefined()
+		})
+
+		test('Must generate Error for invalid refresh token', async () => {
+			expect(() => {
+				AuthService.updateTokens('wrong')
+			}).toThrowError(Constant.VerifyMessage.UNAUTHORIZED)
 		})
 	})
 })

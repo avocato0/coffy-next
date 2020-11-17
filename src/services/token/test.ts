@@ -17,11 +17,9 @@ describe('Token Service', () => {
 		process.env.TOKEN_EXPIRED = '0'
 		const tokens = TokenService.makeTokens({ id: USER_ID })
 
-		try {
-			await TokenService.verify(tokens.accessToken)
-		} catch (err) {
-			expect(err.message).toBe(Constant.TokenMessage.EXPIRED)
-		}
+		expect(TokenService.verify(tokens.accessToken)).rejects.toThrowError(
+			Constant.TokenMessage.EXPIRED
+		)
 	})
 
 	test('Must generate new tokens from expired update token', async () => {
@@ -36,10 +34,8 @@ describe('Token Service', () => {
 		expect(newTokens.accessToken).toBeDefined()
 		expect(newTokens.refreshToken).toBeDefined()
 
-		try {
+		expect(() => {
 			TokenService.updateTokens(tokens.refreshToken)
-		} catch (err) {
-			expect(err.message).toBe(Constant.TokenMessage.NOT_EXIST)
-		}
+		}).toThrowError(Constant.TokenMessage.NOT_EXIST)
 	})
 })

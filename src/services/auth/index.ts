@@ -23,7 +23,15 @@ class AuthService {
 		try {
 			return await TokenService.verify(accessToken)
 		} catch (err) {
-			throw new AuthError(Constant.VerifyMessage.FORBIDDEN)
+			throw new AuthError(Constant.VerifyMessage.UNAUTHORIZED)
+		}
+	}
+
+	updateTokens(refreshToken: TokenModel.ITokens['refreshToken']) {
+		try {
+			return TokenService.updateTokens(refreshToken)
+		} catch (err) {
+			throw new AuthError(Constant.VerifyMessage.UNAUTHORIZED)
 		}
 	}
 }

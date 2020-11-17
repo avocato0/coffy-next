@@ -8,7 +8,7 @@ import * as Model from './model'
 import storage from 'store/storage'
 
 class ApiService {
-	static fetcher = async <T extends Model.IFetch>(
+	static fetch = async <T extends Model.IFetch>(
 		path: T['path'],
 		body: T['request']['body']
 	): Promise<T['response']> => {
@@ -28,16 +28,17 @@ class ApiService {
 				const token = storage.store?.tokens?.refreshToken
 				if (token) {
 					storage.clear()
-					const resp = await ApiService.fetcher<
-						Model.IApiUpdateToken
-					>('/api/auth/update', token)
+					const resp = await ApiService.fetch<Model.IApiUpdateToken>(
+						'/api/auth/update',
+						token
+					)
 
 					if (resp.data) {
 						storage.update({
 							tokens: resp.data,
 						})
 
-						return ApiService.fetcher<T>(path, body)
+						return ApiService.fetch<T>(path, body)
 					}
 				}
 			}
