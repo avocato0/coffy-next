@@ -1,8 +1,8 @@
-import { getHandler } from 'utils/api'
 import authService from 'services/auth'
-import { UnauthApiError } from 'errors/api'
+import { UnauthApiError } from 'services/api/error'
+import ApiService from 'services/api'
 
-export default getHandler(async ({ data: { accessToken } }) => {
+export default ApiService.getHandler(async ({ data: { accessToken } }) => {
 	if (!accessToken) throw UnauthApiError()
 	return authService.verify(accessToken)
 })

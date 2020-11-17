@@ -1,10 +1,10 @@
 import { Button, Label, Container, Form } from 'components'
 import { observer } from 'mobx-react-lite'
-import { IApiAuth } from 'models/api'
+import { IApiAuth } from 'services/api/model'
 import { IUserAuth } from 'models/user'
 import { useContext, useState } from 'react'
 import { StoreContext } from 'store'
-import { fetcher } from 'utils/api'
+import ApiService from 'services/api'
 
 const SignIn = observer(() => {
 	const [email, setEmail] = useState<string>('0.snilcy@gmail.com')
@@ -19,7 +19,7 @@ const SignIn = observer(() => {
 				onSubmit={async (evt) => {
 					evt.preventDefault()
 					const user: IUserAuth = { email, password }
-					const response = await fetcher<IApiAuth>(
+					const response = await ApiService.fetcher<IApiAuth>(
 						'/api/auth/signin',
 						user
 					)

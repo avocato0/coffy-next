@@ -1,7 +1,12 @@
 import AuthService from 'services/auth'
-import { IApiAuth } from 'models/api'
-import { getHandler } from 'utils/api'
+import ApiService, { Model as ApiModel, ApiError } from 'services/api'
 
-export default getHandler<IApiAuth>(async ({ data: { body } }) => {
-	return AuthService.signin(body)
-})
+export default ApiService.getHandler<ApiModel.IApiAuth>(
+	async ({ data: { body } }) => {
+		try {
+			return await AuthService.signin(body)
+		} catch (err) {
+			throw new ApiError(err.message, ApiError.status.BAD_REQUEST)
+		}
+	}
+)

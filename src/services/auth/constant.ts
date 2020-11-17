@@ -1,7 +1,4 @@
-export const JWT_ACCESS_SECRET = `secret`
-export const JWT_REFRESH_SECRET = `secret-refresh`
-
-export const RegisterMessage = {
+export const SignUpMessage = {
 	USER_ALREADY_REGISTER: `Пользователь с таким email уже зарегистрирован`,
 	WRONG_EMAIL: `Неправильный email`,
 	REQUIRED_FIELD: `Поле обязательно для заполнения`,
@@ -11,7 +8,7 @@ export const RegisterMessage = {
 	EMPTY_VALUE: `Не указано значение`,
 }
 
-export const LoginMessage = {
+export const SignInMessage = {
 	USERID_NOT_EXISTS: `Пользователь не найден`,
 	USER_NOT_EXISTS: `Пользователь с таким email не зарегистрирован`,
 	WRONG_PASSWORD: `Неправильно введён логин или пароль`,
@@ -19,8 +16,9 @@ export const LoginMessage = {
 	REQUIRED_FIELD: `Поле обязательно для заполнения`,
 }
 
-export const AuthMessage = {
+export const VerifyMessage = {
 	UNAUTHORIZED: `Не авторизован`,
+	FORBIDDEN: `Ошибка аутентификации`,
 }
 
 export const MIN_PASSWORD_LENGTH = 6

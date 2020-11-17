@@ -1,10 +1,10 @@
-import { LoginMessage } from 'constants/auth'
+import { LoginMessage } from 'services/auth/constant'
 import db from 'db'
-import { ApiError } from 'errors/api'
-import { getHandler } from 'utils/api'
+import { ApiError } from 'services/api/error'
+import ApiService from 'services/api'
 import { copyWithoutProps } from 'utils/helpers'
 
-export default getHandler(async ({ query }) => {
+export default ApiService.getHandler(async ({ query }) => {
 	const user = await db.query.userById(query.id as string)
 
 	if (!user)

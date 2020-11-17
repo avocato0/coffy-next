@@ -12,11 +12,6 @@ export interface IUserDB {
 	readonly password: string
 }
 
-export interface ITokens {
-	accessToken: string
-	refreshToken: string
-}
-
 export interface IUserAuthResponse {
 	user: IUserDB
 	tokens: ITokens

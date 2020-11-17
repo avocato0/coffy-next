@@ -1,4 +1,5 @@
-import { ITokens, IUserAuth } from './user'
+import { IUserAuth } from 'models/user'
+import { Model as TokenModel } from 'services/token'
 
 export interface IResponse<T> {
 	data: T | null
@@ -8,7 +9,7 @@ export interface IResponse<T> {
 
 interface IRequest<T> {
 	body: T
-	accessToken?: ITokens['accessToken']
+	accessToken?: TokenModel.ITokens['accessToken']
 }
 
 export interface IFetch {
@@ -25,9 +26,9 @@ export interface IApi<Path extends string, Req, Resp> extends IFetch {
 	response: IResponse<Resp>
 }
 
-export type IApiAuth = IApi<'/api/auth/signin', IUserAuth, ITokens>
+export type IApiAuth = IApi<'/api/auth/signin', IUserAuth, TokenModel.ITokens>
 export type IApiUpdateToken = IApi<
 	'/api/auth/update',
-	ITokens['refreshToken'],
-	ITokens
+	TokenModel.ITokens['refreshToken'],
+	TokenModel.ITokens
 >

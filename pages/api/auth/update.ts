@@ -1,7 +1,9 @@
 import AuthService from 'services/auth'
-import { IApiAuth, IApiUpdateToken } from 'models/api'
-import { getHandler } from 'utils/api'
+import { IApiAuth, IApiUpdateToken } from 'services/api/model'
+import ApiService from 'services/api'
 
-export default getHandler<IApiUpdateToken>(async ({ data: { body } }) => {
-	return AuthService.updateTokens(body)
-})
+export default ApiService.getHandler<IApiUpdateToken>(
+	async ({ data: { body } }) => {
+		return AuthService.updateTokens(body)
+	}
+)
