@@ -1,8 +1,8 @@
-import authService from 'services/auth'
-import { UnauthApiError } from 'services/api/error'
-import ApiService from 'services/api'
+import { ApiService, PrivateRouteModel } from 'services/api'
+import { userService } from 'services/user'
 
-export default ApiService.getHandler(async ({ data: { accessToken } }) => {
-	if (!accessToken) throw UnauthApiError()
-	return authService.verify(accessToken)
-})
+export default ApiService.getPrivateApiHandler<PrivateRouteModel.Me>(
+	(_, __, userId) => {
+		return userService.getDBUserById(userId)
+	}
+)

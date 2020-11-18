@@ -1,4 +1,4 @@
-import AuthService, { Constant } from './'
+import { AuthService, Constant } from './'
 
 const user = {
 	email: '0.snilcy@gmail.com',

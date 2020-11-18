@@ -1,7 +1,7 @@
 import { Button, Label, Container, Form } from 'components'
 import { observer } from 'mobx-react-lite'
 import { IApiAuth } from 'services/api/model'
-import { IUserAuth } from 'models/user'
+import { IUserAuth } from 'services/user/model'
 import { useContext, useState } from 'react'
 import { StoreContext } from 'store'
 import ApiService from 'services/api'

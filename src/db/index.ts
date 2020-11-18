@@ -1,4 +1,4 @@
-import { IUserAuth, IUserDB } from 'models/user'
+import type { UserModel } from 'services/user'
 import { Pool } from 'pg'
 
 const pool = new Pool()
@@ -18,14 +18,14 @@ pool.on('error', (err: Error) => {
 
 export default {
 	query: {
-		async userById(id: string): Promise<IUserDB> {
+		async userById(id: UserModel.DB['id']): Promise<UserModel.DB> {
 			const result = await pool.query(
 				'SELECT * FROM users WHERE id = $1',
 				[id]
 			)
 			return result.rows[0]
 		},
-		async userByEmail(user: IUserAuth): Promise<IUserDB> {
+		async userByEmail(user: UserModel.Auth): Promise<UserModel.DB> {
 			const result = await pool.query(
 				'SELECT * FROM users WHERE email = $1',
 				[user.email]

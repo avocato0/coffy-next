@@ -1,14 +1,14 @@
 import bcrypt from 'bcryptjs'
 
-import type { IUserAuth } from 'models/user'
+import type { UserModel } from 'services/user'
 import db from 'db'
-import TokenService, { Model as TokenModel } from 'services/token'
+import { TokenService, TokenModel } from 'services/token'
 
 import AuthError from './error'
 import * as Constant from './constant'
 
-class AuthService {
-	async signin(user: IUserAuth) {
+const AuthService = new (class AuthService {
+	async signin(user: UserModel.Auth) {
 		const dbUser = await db.query.userByEmail(user)
 		if (!dbUser)
 			throw new AuthError(Constant.SignInMessage.USERID_NOT_EXISTS)
@@ -19,7 +19,7 @@ class AuthService {
 		return TokenService.makeTokens({ id: dbUser.id })
 	}
 
-	async verify(accessToken: TokenModel.ITokens['accessToken']) {
+	async verify(accessToken: TokenModel.Tokens['accessToken']) {
 		try {
 			return await TokenService.verify(accessToken)
 		} catch (err) {
@@ -27,14 +27,13 @@ class AuthService {
 		}
 	}
 
-	updateTokens(refreshToken: TokenModel.ITokens['refreshToken']) {
+	updateTokens(refreshToken: TokenModel.Tokens['refreshToken']) {
 		try {
 			return TokenService.updateTokens(refreshToken)
 		} catch (err) {
 			throw new AuthError(Constant.VerifyMessage.UNAUTHORIZED)
 		}
 	}
-}
+})()
 
-export default new AuthService()
-export { Constant, AuthError }
+export { Constant, AuthError, AuthService }

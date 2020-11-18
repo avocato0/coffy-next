@@ -1,34 +1,62 @@
-import { IUserAuth } from 'models/user'
-import { Model as TokenModel } from 'services/token'
+import { UserModel } from 'services/user'
+import { NextApiRequest, NextApiResponse } from 'next'
+import { TokenModel } from 'services/token'
 
-export interface IResponse<T> {
-	data: T | null
-	error: string | null
-	status: number
+export namespace APIModel {
+	export interface Response<T> {
+		data: T | null
+		error: string | null
+		status: number
+	}
+
+	interface Request<T> {
+		body: T
+		accessToken?: TokenModel.Tokens['accessToken']
+	}
+
+	export interface Fetch {
+		path: string
+		request: Request<any>
+		response: Response<any>
+	}
+
+	export interface Route<Path extends string, Req, Resp> extends Fetch {
+		path: Path
+		request: Request<Req>
+		response: Response<Resp>
+	}
+
+	type HandlerCallback<F extends Fetch> = (
+		data: F['request']['body'],
+		query: NextApiRequest['query'],
+		userId: string
+	) => Promise<F['response']['data']>
+
+	export type Hanlder = <R extends APIModel.Fetch>(
+		callback: HandlerCallback<R>
+	) => (
+		req: Omit<NextApiRequest, 'body'> & {
+			body: R['request']
+			userId: string
+		},
+		res: NextApiResponse<R['response']>
+	) => Promise<void>
 }
 
-interface IRequest<T> {
-	body: T
-	accessToken?: TokenModel.ITokens['accessToken']
+export namespace RouteModel {
+	export type Auth = APIModel.Route<
+		'/api/auth/signin',
+		UserModel.Auth,
+		TokenModel.Tokens
+	>
+
+	export type UpdateToken = APIModel.Route<
+		'/api/auth/update',
+		TokenModel.Tokens['refreshToken'],
+		TokenModel.Tokens
+	>
 }
 
-export interface IFetch {
-	path: string
-	request: IRequest<any>
-	response: IResponse<any>
+export namespace PrivateRouteModel {
+	export type Me = APIModel.Route<'/api/me', undefined, UserModel.DB>
 }
-
-export interface IApiHandler {}
-
-export interface IApi<Path extends string, Req, Resp> extends IFetch {
-	path: Path
-	request: IRequest<Req>
-	response: IResponse<Resp>
-}
-
-export type IApiAuth = IApi<'/api/auth/signin', IUserAuth, TokenModel.ITokens>
-export type IApiUpdateToken = IApi<
-	'/api/auth/update',
-	TokenModel.ITokens['refreshToken'],
-	TokenModel.ITokens
->

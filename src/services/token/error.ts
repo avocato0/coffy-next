@@ -1,4 +1,3 @@
-import { JsonWebTokenError } from 'jsonwebtoken'
 import type { IError } from 'models'
 
 export default class TokenError extends Error implements IError {

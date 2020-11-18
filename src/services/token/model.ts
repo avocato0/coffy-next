@@ -1,8 +1,12 @@
-export interface ITokens {
-	accessToken: string
-	refreshToken: string
+namespace TokenModel {
+	export interface Tokens {
+		accessToken: string
+		refreshToken: string
+	}
+
+	export interface Payload {
+		id: string
+	}
 }
 
-export interface IPayload {
-	id: string
-}
+export default TokenModel

@@ -1,16 +1,16 @@
-import { NextApiRequest, NextApiResponse } from 'next'
 import httpStatus from 'http-status-codes'
 
 import * as Constant from './constant'
 import ApiError from './error'
-import * as Model from './model'
+import { RouteModel, APIModel, PrivateRouteModel } from './model'
 
-import storage from 'store/storage'
+import { AuthService, Constant as AuthConstant } from 'services/auth'
+import { StoreService } from 'services/store'
 
-class ApiService {
-	static fetch = async <T extends Model.IFetch>(
+const ApiService = new (class ApiService {
+	fetch = async <T extends APIModel.Fetch>(
 		path: T['path'],
-		body: T['request']['body']
+		body?: T['request']['body']
 	): Promise<T['response']> => {
 		try {
 			const response = await fetch(path, {
@@ -19,26 +19,24 @@ class ApiService {
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({
-					accessToken: storage.store?.tokens?.accessToken,
+					accessToken: StoreService.tokens?.accessToken,
 					body,
 				}),
 			})
 
 			if (response.status === httpStatus.UNAUTHORIZED) {
-				const token = storage.store?.tokens?.refreshToken
+				const token = StoreService.tokens?.refreshToken
 				if (token) {
-					storage.clear()
-					const resp = await ApiService.fetch<Model.IApiUpdateToken>(
+					StoreService.clear()
+
+					const resp = await this.fetch<RouteModel.UpdateToken>(
 						'/api/auth/update',
 						token
 					)
 
 					if (resp.data) {
-						storage.update({
-							tokens: resp.data,
-						})
-
-						return ApiService.fetch<T>(path, body)
+						StoreService.tokens = resp.data
+						return this.fetch<T>(path, body)
 					}
 				}
 			}
@@ -48,7 +46,7 @@ class ApiService {
 			console.error(err)
 		}
 
-		const error: Model.IResponse<null> = {
+		const error: APIModel.Response<null> = {
 			error: Constant.RequestMessage.FETCH_ERROR,
 			status: httpStatus.BAD_REQUEST,
 			data: null,
@@ -57,20 +55,16 @@ class ApiService {
 		return error
 	}
 
-	static getHandler = <T extends Model.IFetch>(
-		callback: (data: {
-			data: T['request']
-			query: NextApiRequest['query']
-		}) => Promise<T['response']['data']>
-	) => {
-		return async (req: NextApiRequest, res: NextApiResponse) => {
+	getApiHandler: APIModel.Hanlder = (callback) => {
+		return async (req, res) => {
 			try {
-				const data = await callback({
-					data: req.body,
-					query: req.query,
-				})
+				const data = await callback(
+					req.body.body,
+					req.query,
+					req.userId
+				)
 
-				res.send(
+				return res.send(
 					data
 						? {
 								data,
@@ -90,15 +84,42 @@ class ApiService {
 					res.status(err.status)
 				}
 
-				res.send({
+				return res.send({
 					data: null,
 					error: err.message,
-					status: err.status,
+					status: httpStatus.BAD_REQUEST,
 				})
 			}
 		}
 	}
-}
 
-export default ApiService
-export { Constant, ApiError, Model }
+	getPrivateApiHandler: APIModel.Hanlder = (callback) => {
+		return async (req, res) => {
+			const { accessToken } = req.body
+			if (!accessToken) {
+				res.status(httpStatus.UNAUTHORIZED)
+				return res.send({
+					error: AuthConstant.VerifyMessage.UNAUTHORIZED,
+					status: httpStatus.UNAUTHORIZED,
+					data: null,
+				})
+			}
+
+			try {
+				const payload = await AuthService.verify(accessToken)
+				req.userId = payload.id
+				this.getApiHandler(callback)(req, res)
+			} catch (err) {
+				res.status(httpStatus.UNAUTHORIZED)
+				return res.send({
+					data: null,
+					error: err.message,
+					status: httpStatus.UNAUTHORIZED,
+				})
+			}
+		}
+	}
+})()
+
+export { ApiService, Constant, ApiError }
+export type { APIModel, RouteModel, PrivateRouteModel }

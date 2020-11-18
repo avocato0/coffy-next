@@ -1,4 +1,4 @@
-import TokenService, { Constant } from './'
+import { TokenService, Constant } from './'
 
 const USER_ID = '137'
 

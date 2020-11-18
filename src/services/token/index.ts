@@ -2,12 +2,12 @@ import jwt, { TokenExpiredError } from 'jsonwebtoken'
 
 import * as Constant from './constant'
 import TokenError from './error'
-import * as Model from './model'
+import TokenModel from './model'
 
 import { copyWithoutProps } from 'utils/helpers'
 
-class TokenService {
-	private tokens: Model.ITokens['refreshToken'][] = []
+const TokenService = new (class {
+	private tokens: TokenModel.Tokens['refreshToken'][] = []
 
 	refreshAdd(token: string) {
 		this.tokens.push(token)
@@ -21,7 +21,7 @@ class TokenService {
 		this.tokens = this.tokens.filter((el) => token !== el)
 	}
 
-	makeTokens(data: Model.IPayload): Model.ITokens {
+	makeTokens(data: TokenModel.Payload): TokenModel.Tokens {
 		const accessToken = jwt.sign(data, Constant.JWT_ACCESS_SECRET, {
 			expiresIn: process.env.TOKEN_EXPIRED,
 		})
@@ -32,14 +32,16 @@ class TokenService {
 		return { accessToken, refreshToken }
 	}
 
-	updateTokens(refreshToken: Model.ITokens['refreshToken']): Model.ITokens {
+	updateTokens(
+		refreshToken: TokenModel.Tokens['refreshToken']
+	): TokenModel.Tokens {
 		const exist = this.refreshExist(refreshToken)
 		if (!exist) throw new TokenError(Constant.TokenMessage.NOT_EXIST)
 
 		const payload = jwt.verify(
 			refreshToken,
 			Constant.JWT_REFRESH_SECRET
-		) as Model.IPayload
+		) as TokenModel.Payload
 		const tokens = this.makeTokens({ id: payload.id })
 
 		this.refreshDrop(refreshToken)
@@ -49,13 +51,13 @@ class TokenService {
 	}
 
 	async verify(
-		accessToken: Model.ITokens['accessToken']
-	): Promise<Model.IPayload> {
+		accessToken: TokenModel.Tokens['accessToken']
+	): Promise<TokenModel.Payload> {
 		try {
 			const payload = jwt.verify(
 				accessToken,
 				Constant.JWT_ACCESS_SECRET
-			) as Model.IPayload
+			) as TokenModel.Payload
 			return copyWithoutProps(payload, 'iat', 'exp')
 		} catch (err) {
 			if (err instanceof TokenExpiredError)
@@ -64,7 +66,7 @@ class TokenService {
 			throw new TokenError(Constant.TokenMessage.NOT_VALID)
 		}
 	}
-}
+})()
 
-export default new TokenService()
-export { Model, Constant, TokenError, TokenExpiredError }
+export { Constant, TokenError, TokenService }
+export type { TokenModel }

@@ -1,9 +1,8 @@
-import AuthService from 'services/auth'
-import { IApiAuth, IApiUpdateToken } from 'services/api/model'
-import ApiService from 'services/api'
+import { AuthService } from 'services/auth'
+import { ApiService, RouteModel } from 'services/api'
 
-export default ApiService.getHandler<IApiUpdateToken>(
-	async ({ data: { body } }) => {
+export default ApiService.getApiHandler<RouteModel.UpdateToken>(
+	async (body) => {
 		return AuthService.updateTokens(body)
 	}
 )
