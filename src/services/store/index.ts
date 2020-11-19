@@ -1,4 +1,4 @@
-import { TokenModel } from 'services/token'
+import type { TokenModel } from 'services/token'
 
 type ITokens = TokenModel.Tokens | null
 

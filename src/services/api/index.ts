@@ -1,10 +1,11 @@
 import httpStatus from 'http-status-codes'
 
-import * as Constant from './constant'
+import ApiConstant from './constant'
 import ApiError from './error'
-import { RouteModel, APIModel, PrivateRouteModel } from './model'
 
-import { AuthService, Constant as AuthConstant } from 'services/auth'
+import type { APIModel, RouteModel, PrivateRouteModel } from './model'
+
+import { AuthService, AuthConstant } from 'services/auth'
 import { StoreService } from 'services/store'
 
 const ApiService = new (class ApiService {
@@ -47,7 +48,7 @@ const ApiService = new (class ApiService {
 		}
 
 		const error: APIModel.Response<null> = {
-			error: Constant.RequestMessage.FETCH_ERROR,
+			error: ApiConstant.Message.FETCH_ERROR,
 			status: httpStatus.BAD_REQUEST,
 			data: null,
 		}
@@ -74,7 +75,7 @@ const ApiService = new (class ApiService {
 						: {
 								data: null,
 								status: httpStatus.BAD_REQUEST,
-								error: Constant.ResponseMessage.EMPTY_RESPONSE,
+								error: ApiConstant.Message.EMPTY_RESPONSE,
 						  }
 				)
 			} catch (err) {
@@ -99,7 +100,7 @@ const ApiService = new (class ApiService {
 			if (!accessToken) {
 				res.status(httpStatus.UNAUTHORIZED)
 				return res.send({
-					error: AuthConstant.VerifyMessage.UNAUTHORIZED,
+					error: AuthConstant.Message.Verify.UNAUTHORIZED,
 					status: httpStatus.UNAUTHORIZED,
 					data: null,
 				})
@@ -121,5 +122,5 @@ const ApiService = new (class ApiService {
 	}
 })()
 
-export { ApiService, Constant, ApiError }
+export { ApiService, ApiConstant, ApiError }
 export type { APIModel, RouteModel, PrivateRouteModel }

@@ -1,12 +1,12 @@
 import jwt, { TokenExpiredError } from 'jsonwebtoken'
 
-import * as Constant from './constant'
+import TokenConstant from './constant'
 import TokenError from './error'
 import TokenModel from './model'
 
 import { copyWithoutProps } from 'utils/helpers'
 
-const TokenService = new (class {
+const TokenService = new (class TokenService {
 	private tokens: TokenModel.Tokens['refreshToken'][] = []
 
 	refreshAdd(token: string) {
@@ -22,11 +22,11 @@ const TokenService = new (class {
 	}
 
 	makeTokens(data: TokenModel.Payload): TokenModel.Tokens {
-		const accessToken = jwt.sign(data, Constant.JWT_ACCESS_SECRET, {
+		const accessToken = jwt.sign(data, TokenConstant.JWT_ACCESS_SECRET, {
 			expiresIn: process.env.TOKEN_EXPIRED,
 		})
 
-		const refreshToken = jwt.sign(data, Constant.JWT_REFRESH_SECRET)
+		const refreshToken = jwt.sign(data, TokenConstant.JWT_REFRESH_SECRET)
 		this.refreshAdd(refreshToken)
 
 		return { accessToken, refreshToken }
@@ -36,11 +36,11 @@ const TokenService = new (class {
 		refreshToken: TokenModel.Tokens['refreshToken']
 	): TokenModel.Tokens {
 		const exist = this.refreshExist(refreshToken)
-		if (!exist) throw new TokenError(Constant.TokenMessage.NOT_EXIST)
+		if (!exist) throw new TokenError(TokenConstant.Message.NOT_EXIST)
 
 		const payload = jwt.verify(
 			refreshToken,
-			Constant.JWT_REFRESH_SECRET
+			TokenConstant.JWT_REFRESH_SECRET
 		) as TokenModel.Payload
 		const tokens = this.makeTokens({ id: payload.id })
 
@@ -56,17 +56,17 @@ const TokenService = new (class {
 		try {
 			const payload = jwt.verify(
 				accessToken,
-				Constant.JWT_ACCESS_SECRET
+				TokenConstant.JWT_ACCESS_SECRET
 			) as TokenModel.Payload
 			return copyWithoutProps(payload, 'iat', 'exp')
 		} catch (err) {
 			if (err instanceof TokenExpiredError)
-				throw new TokenError(Constant.TokenMessage.EXPIRED)
+				throw new TokenError(TokenConstant.Message.EXPIRED)
 
-			throw new TokenError(Constant.TokenMessage.NOT_VALID)
+			throw new TokenError(TokenConstant.Message.NOT_VALID)
 		}
 	}
 })()
 
-export { Constant, TokenError, TokenService }
+export { TokenConstant, TokenError, TokenService }
 export type { TokenModel }

@@ -1,8 +1,8 @@
 import { ApiService, PrivateRouteModel } from 'services/api'
-import { userService } from 'services/user'
+import { UserService } from 'services/user'
 
 export default ApiService.getPrivateApiHandler<PrivateRouteModel.Me>(
 	(_, __, userId) => {
-		return userService.getDBUserById(userId)
+		return UserService.getDBUserById(userId)
 	}
 )

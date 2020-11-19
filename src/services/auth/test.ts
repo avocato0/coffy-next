@@ -1,4 +1,4 @@
-import { AuthService, Constant } from './'
+import { AuthService, AuthConstant } from './'
 
 const user = {
 	email: '0.snilcy@gmail.com',
@@ -20,7 +20,7 @@ describe('Authentication Service', () => {
 					email: user.email,
 					password: 'wrong',
 				})
-			).rejects.toThrowError(Constant.SignInMessage.WRONG_PASSWORD)
+			).rejects.toThrowError(AuthConstant.Message.SignIn.WRONG_PASSWORD)
 		})
 	})
 
@@ -34,7 +34,7 @@ describe('Authentication Service', () => {
 
 		test('Must generate Error for invalid token', async () => {
 			expect(AuthService.verify('wrong')).rejects.toThrowError(
-				Constant.VerifyMessage.UNAUTHORIZED
+				AuthConstant.Message.Verify.UNAUTHORIZED
 			)
 		})
 
@@ -43,7 +43,7 @@ describe('Authentication Service', () => {
 			const tokens = await AuthService.signin(user)
 
 			expect(AuthService.verify(tokens.accessToken)).rejects.toThrowError(
-				Constant.VerifyMessage.UNAUTHORIZED
+				AuthConstant.Message.Verify.UNAUTHORIZED
 			)
 		})
 	})
@@ -60,7 +60,7 @@ describe('Authentication Service', () => {
 		test('Must generate Error for invalid refresh token', async () => {
 			expect(() => {
 				AuthService.updateTokens('wrong')
-			}).toThrowError(Constant.VerifyMessage.UNAUTHORIZED)
+			}).toThrowError(AuthConstant.Message.Verify.UNAUTHORIZED)
 		})
 	})
 })

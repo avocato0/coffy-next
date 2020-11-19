@@ -1,4 +1,4 @@
-import { TokenService, Constant } from './'
+import { TokenService, TokenConstant } from './'
 
 const USER_ID = '137'
 
@@ -18,7 +18,7 @@ describe('Token Service', () => {
 		const tokens = TokenService.makeTokens({ id: USER_ID })
 
 		expect(TokenService.verify(tokens.accessToken)).rejects.toThrowError(
-			Constant.TokenMessage.EXPIRED
+			TokenConstant.Message.EXPIRED
 		)
 	})
 
@@ -36,6 +36,6 @@ describe('Token Service', () => {
 
 		expect(() => {
 			TokenService.updateTokens(tokens.refreshToken)
-		}).toThrowError(Constant.TokenMessage.NOT_EXIST)
+		}).toThrowError(TokenConstant.Message.NOT_EXIST)
 	})
 })

@@ -1,7 +1,6 @@
-export const RequestMessage = {
-	FETCH_ERROR: 'Ошибка запроса',
-}
-
-export const ResponseMessage = {
-	EMPTY_RESPONSE: 'Пустой ответ',
+export default {
+	Message: {
+		FETCH_ERROR: 'Ошибка запроса',
+		EMPTY_RESPONSE: 'Пустой ответ',
+	},
 }

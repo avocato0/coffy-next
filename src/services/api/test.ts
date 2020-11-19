@@ -1,5 +1,5 @@
 import { ApiService, PrivateRouteModel, RouteModel } from './'
-import { Constant as AuthConstant } from 'services/auth'
+import { AuthConstant } from 'services/auth'
 import { StoreService } from 'services/store'
 
 const user = {
@@ -32,7 +32,7 @@ describe('API Service', () => {
 			)
 
 			expect(response.error).toMatch(
-				AuthConstant.SignInMessage.WRONG_PASSWORD
+				AuthConstant.Message.SignIn.WRONG_PASSWORD
 			)
 			expect(response.data).toBeNull()
 			expect(response.status).toBe(400)
