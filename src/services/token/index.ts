@@ -2,7 +2,7 @@ import jwt, { TokenExpiredError } from 'jsonwebtoken'
 
 import TokenConstant from './constant'
 import TokenError from './error'
-import TokenModel from './model'
+import { TokenModel } from './model'
 
 import { copyWithoutProps } from 'utils/helpers'
 
@@ -69,4 +69,3 @@ const TokenService = new (class TokenService {
 })()
 
 export { TokenConstant, TokenError, TokenService }
-export type { TokenModel }

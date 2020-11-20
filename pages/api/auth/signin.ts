@@ -1,10 +1,11 @@
 import { AuthService } from 'services/auth'
-import { ApiService, RouteModel, ApiError } from 'services/api'
+import { ApiService, ApiError } from 'services/api'
+import type { RouteModel } from 'services/api/model'
 
 export default ApiService.getApiHandler<RouteModel.Auth>(async (body) => {
 	try {
 		return await AuthService.signin(body)
 	} catch (err) {
-		throw new ApiError(err.message, ApiError.status.BAD_REQUEST)
+		throw new ApiError(ApiError.StatusCodes.BAD_REQUEST, err)
 	}
 })

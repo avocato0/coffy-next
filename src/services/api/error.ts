@@ -1,14 +1,20 @@
-import httpStatus from 'http-status-codes'
-import { IError } from 'models'
+import { getReasonPhrase, StatusCodes } from 'http-status-codes'
 
-export default class ApiError extends Error implements IError {
-	static status = httpStatus
-
-	status = httpStatus.OK
+class ApiError extends Error {
+	static StatusCodes = StatusCodes
 	name = 'ApiError'
 
-	constructor(message: string, status = httpStatus.BAD_REQUEST) {
-		super(message)
-		this.status = status
+	public code: string
+	public message: string
+
+	constructor(
+		public status: StatusCodes = StatusCodes.BAD_REQUEST,
+		public inner?: Error
+	) {
+		super()
+		this.code = StatusCodes[status]
+		this.message = getReasonPhrase(status)
 	}
 }
+
+export default ApiError

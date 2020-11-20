@@ -1,4 +1,4 @@
-import type { UserModel } from 'services/user'
+import type { UserModel } from 'services/user/model'
 import { Pool } from 'pg'
 
 const pool = new Pool()

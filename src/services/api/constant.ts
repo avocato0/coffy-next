@@ -1,6 +1,6 @@
-export default {
+export const ApiConstant = {
 	Message: {
-		FETCH_ERROR: 'Ошибка запроса',
 		EMPTY_RESPONSE: 'Пустой ответ',
+		BAD_REQUEST: 'Некорректный запрос',
 	},
 }

@@ -1,13 +1,15 @@
 import Navbar from 'components/Navbar'
+import Head from 'next/head'
+
+import 'styles/globals.scss'
+
 import type { AppProps } from 'next/app'
 
-import Head from 'next/head'
-import { InjectStoreContext } from 'store'
-import 'styles/globals.scss'
+// import { InjectStoreContext } from 'store'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
 	return (
-		<InjectStoreContext>
+		<>
 			<Head>
 				<title>{Component.name} &#8210; Coffy</title>
 				<link rel='icon' href='/favicon.ico' />
@@ -15,6 +17,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
 			<Navbar />
 			<Component {...pageProps} />
-		</InjectStoreContext>
+		</>
 	)
 }

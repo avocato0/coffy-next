@@ -35,5 +35,5 @@ global.fetch = async (path: RequestInfo, req?: RequestInit | undefined) => {
 
 // @ts-ignore
 global.wait = async (timeout = 100) => {
-	return new Promise((resolve) => setTimeout(() => resolve(), timeout))
+	return new Promise((resolve) => setTimeout(resolve, timeout))
 }

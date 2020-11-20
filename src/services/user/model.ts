@@ -1,4 +1,4 @@
-namespace UserModel {
+export namespace UserModel {
 	export interface Auth {
 		email: string
 		password: string
@@ -13,5 +13,3 @@ namespace UserModel {
 		readonly password: string
 	}
 }
-
-export default UserModel

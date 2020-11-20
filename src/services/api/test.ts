@@ -1,13 +1,15 @@
-import { ApiService, PrivateRouteModel, RouteModel } from './'
-import { AuthConstant } from 'services/auth'
 import { StoreService } from 'services/store'
+
+import type { PrivateRouteModel, RouteModel } from './model'
+import { fetcher } from 'services/fetch'
+import ApiError from './error'
 
 const user = {
 	email: '0.snilcy@gmail.com',
 	password: '123456',
 }
 
-const auth = () => ApiService.fetch<RouteModel.Auth>('/api/auth/signin', user)
+const auth = () => fetcher<RouteModel.Auth>('/api/auth/signin', user)
 
 beforeEach(StoreService.clear)
 
@@ -18,12 +20,11 @@ describe('API Service', () => {
 
 			expect(response.data?.accessToken).toBeDefined()
 			expect(response.data?.refreshToken).toBeDefined()
-			expect(response.error).toBeNull()
-			expect(response.status).toBe(200)
+			expect(response.errors.length).toBe(0)
 		})
 
 		test('Must generate Error for invalid user', async () => {
-			const response = await ApiService.fetch<RouteModel.Auth>(
+			const response = await fetcher<RouteModel.Auth>(
 				'/api/auth/signin',
 				{
 					email: user.email,
@@ -31,11 +32,8 @@ describe('API Service', () => {
 				}
 			)
 
-			expect(response.error).toMatch(
-				AuthConstant.Message.SignIn.WRONG_PASSWORD
-			)
 			expect(response.data).toBeNull()
-			expect(response.status).toBe(400)
+			expect(response.errors[0].name).toBe(ApiError.name)
 		})
 	})
 
@@ -44,21 +42,17 @@ describe('API Service', () => {
 			const { data: tokens } = await auth()
 
 			StoreService.tokens = tokens
-			const response = await ApiService.fetch<PrivateRouteModel.Me>(
-				'/api/me'
-			)
+			const response = await fetcher<PrivateRouteModel.Me>('/api/me')
 
 			expect(response.data).toBeDefined()
-			expect(response.error).toBeNull()
-			expect(response.status).toBe(200)
+			expect(response.errors.length).toBe(0)
 		})
 
 		test('Must return error for empty token', async () => {
-			const response = await ApiService.fetch<PrivateRouteModel.Me>(
-				'/api/me'
-			)
-			expect(response.status).toBe(401)
+			const response = await fetcher<PrivateRouteModel.Me>('/api/me')
+
 			expect(response.data).toBeNull()
+			expect(response.errors[0].name).toBe(ApiError.name)
 		})
 	})
 
@@ -67,15 +61,14 @@ describe('API Service', () => {
 			const { data: tokens } = await auth()
 
 			if (tokens) {
-				const response = await ApiService.fetch<RouteModel.UpdateToken>(
+				const response = await fetcher<RouteModel.UpdateToken>(
 					'/api/auth/update',
 					tokens.refreshToken
 				)
 
 				expect(response.data?.accessToken).toBeDefined()
 				expect(response.data?.refreshToken).toBeDefined()
-				expect(response.error).toBeNull()
-				expect(response.status).toBe(200)
+				expect(response.errors.length).toBe(0)
 			}
 		})
 
@@ -86,12 +79,10 @@ describe('API Service', () => {
 			await wait(1000)
 
 			StoreService.tokens = tokens
-			const response = await ApiService.fetch<PrivateRouteModel.Me>(
-				'/api/me'
-			)
+			const response = await fetcher<PrivateRouteModel.Me>('/api/me')
 
 			expect(response.data).toBeDefined()
-			expect(response.status).toBe(200)
+			expect(response.errors.length).toBe(0)
 		})
 	})
 })

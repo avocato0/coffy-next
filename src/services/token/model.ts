@@ -1,4 +1,4 @@
-namespace TokenModel {
+export namespace TokenModel {
 	export interface Tokens {
 		accessToken: string
 		refreshToken: string
@@ -8,5 +8,3 @@ namespace TokenModel {
 		id: string
 	}
 }
-
-export default TokenModel

@@ -1,7 +1,8 @@
 import User from 'components/User'
+import { useUser } from 'hooks/api/user'
 import Link from 'next/link'
+import { fetcher } from 'services/fetch'
 import useSWR from 'swr'
-import { fetcher } from 'utils/api'
 import styles from './Navbar.module.scss'
 
 const navList = [
@@ -11,8 +12,7 @@ const navList = [
 ]
 
 const Navbar = () => {
-	// const response = useSWR('/api/me', fetcher)
-	// console.log(response.data)
+	const { user } = useUser()
 
 	return (
 		<section className={styles.Container}>
@@ -29,7 +29,7 @@ const Navbar = () => {
 					})}
 				</ul>
 			</nav>
-			<User />
+			{user?.name || 'Unknow'}
 		</section>
 	)
 }

@@ -1,5 +1,6 @@
 import { AuthService } from 'services/auth'
-import { ApiService, RouteModel } from 'services/api'
+import { ApiService } from 'services/api'
+import type { RouteModel } from 'services/api/model'
 
 export default ApiService.getApiHandler<RouteModel.UpdateToken>(
 	async (body) => {

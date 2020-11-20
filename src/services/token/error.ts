@@ -1,8 +1,5 @@
-import type { IError } from 'models'
-
-export default class TokenError extends Error implements IError {
-	constructor(message: string) {
-		super(message)
-		this.name = 'TokenError'
+export default class TokenError extends Error {
+	constructor(public message: string) {
+		super()
 	}
 }

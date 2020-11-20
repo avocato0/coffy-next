@@ -1,6 +1,6 @@
 import db from 'db'
 
-import type UserModel from './model'
+import type { UserModel } from './model'
 import UserError from './error'
 import UserConstant from './constant'
 
@@ -15,5 +15,4 @@ const UserService = new (class UserService {
 	}
 })()
 
-export type { UserModel }
 export { UserError, UserConstant, UserService }

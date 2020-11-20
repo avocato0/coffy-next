@@ -1,12 +1,11 @@
-import { UserModel } from 'services/user'
-import { NextApiRequest, NextApiResponse } from 'next'
-import { TokenModel } from 'services/token'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import type { UserModel } from 'services/user/model'
+import type { TokenModel } from 'services/token/model'
 
 export namespace APIModel {
 	export interface Response<T> {
 		data: T | null
-		error: string | null
-		status: number
+		errors: Error[]
 	}
 
 	interface Request<T> {
@@ -26,7 +25,7 @@ export namespace APIModel {
 		response: Response<Resp>
 	}
 
-	type HandlerCallback<F extends Fetch> = (
+	type HandlerCallback<F extends APIModel.Fetch> = (
 		data: F['request']['body'],
 		query: NextApiRequest['query'],
 		userId: string

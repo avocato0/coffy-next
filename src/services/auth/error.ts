@@ -1,8 +1,9 @@
-import { IError } from 'models'
+class AuthError extends Error {
+	name = 'AuthError'
 
-export default class AuthError extends Error implements IError {
-	constructor(message: string) {
-		super(message)
-		this.name = 'AuthError'
+	constructor(public message: string, public inner?: Error) {
+		super()
 	}
 }
+
+export default AuthError
