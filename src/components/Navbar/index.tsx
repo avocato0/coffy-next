@@ -1,8 +1,5 @@
-import User from 'components/User'
 import { useUser } from 'hooks/api/user'
 import Link from 'next/link'
-import { fetcher } from 'services/fetch'
-import useSWR from 'swr'
 import styles from './Navbar.module.scss'
 
 const navList = [
@@ -12,8 +9,7 @@ const navList = [
 ]
 
 const Navbar = () => {
-	const { user } = useUser()
-
+	const user = useUser()
 	return (
 		<section className={styles.Container}>
 			<nav>
@@ -29,7 +25,7 @@ const Navbar = () => {
 					})}
 				</ul>
 			</nav>
-			{user?.name || 'Unknow'}
+			{user.isLoading ? 'Loading...' : user?.data?.name || 'Unknow'}
 		</section>
 	)
 }

@@ -1,11 +1,12 @@
-import { fetcher } from 'services/fetch'
-import useSWR from 'swr'
+import { PrivateRouteModel } from 'services/api/model'
+import { HttpService } from 'services/http'
 
 export const useUser = () => {
-	const { data, error } = useSWR('/api/me', fetcher)
+	const { data, error } = HttpService.get<PrivateRouteModel.Me>('/api/me')
 
 	return {
-		user: data?.data,
-		isLoading: !error && !data,
+		data,
+		isError: !!error,
+		isLoading: !data && !error,
 	}
 }

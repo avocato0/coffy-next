@@ -1,11 +1,11 @@
-import Navbar from 'components/Navbar'
+import type { AppProps } from 'next/app'
 import Head from 'next/head'
+import { SWRConfig } from 'swr'
+
+import Navbar from 'components/Navbar'
+import { HttpService } from 'services/http'
 
 import 'styles/globals.scss'
-
-import type { AppProps } from 'next/app'
-
-// import { InjectStoreContext } from 'store'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
 	return (
@@ -15,8 +15,23 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 
-			<Navbar />
-			<Component {...pageProps} />
+			<SWRConfig
+				value={{
+					fetcher: async (path, config) => {
+						const { data, error } = await HttpService.fetcher(
+							path,
+							config
+						)
+						if (data) {
+							return data
+						}
+
+						throw error
+					},
+				}}>
+				<Navbar />
+				<Component {...pageProps} />
+			</SWRConfig>
 		</>
 	)
 }

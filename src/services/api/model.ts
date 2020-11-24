@@ -5,7 +5,7 @@ import type { TokenModel } from 'services/token/model'
 export namespace APIModel {
 	export interface Response<T> {
 		data: T | null
-		errors: Error[]
+		error: Error | null
 	}
 
 	interface Request<T> {

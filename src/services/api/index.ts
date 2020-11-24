@@ -19,24 +19,22 @@ const ApiService = new (class ApiService {
 				if (data) {
 					return res.send({
 						data,
-						errors: [],
+						error: null,
 					})
 				} else {
 					res.status(ApiError.StatusCodes.INTERNAL_SERVER_ERROR)
 					return res.send({
 						data: null,
-						errors: [
-							new ApiError(
-								ApiError.StatusCodes.INTERNAL_SERVER_ERROR
-							),
-						],
+						error: new ApiError(
+							ApiError.StatusCodes.INTERNAL_SERVER_ERROR
+						),
 					})
 				}
 			} catch (err) {
 				res.status(err.status || StatusCodes.BAD_REQUEST)
 				return res.send({
 					data: null,
-					errors: [err],
+					error: err,
 				})
 			}
 		}
@@ -54,7 +52,7 @@ const ApiService = new (class ApiService {
 				res.status(StatusCodes.UNAUTHORIZED)
 				return res.send({
 					data: null,
-					errors: [new ApiError(StatusCodes.UNAUTHORIZED, err)],
+					error: new ApiError(StatusCodes.UNAUTHORIZED, err),
 				})
 			}
 		}

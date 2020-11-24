@@ -1,10 +1,10 @@
 import { Button, Label, Container, Form } from 'components'
 import { useState } from 'react'
-import { fetcher } from 'services/fetch'
 import { StoreService } from 'services/store'
 import { mutate } from 'swr'
 
 import type { RouteModel } from 'services/api/model'
+import { HttpService } from 'services/http'
 
 const SignIn = () => {
 	const [email, setEmail] = useState<string>('0.snilcy@gmail.com')
@@ -16,19 +16,17 @@ const SignIn = () => {
 			<Form
 				onSubmit={async (evt) => {
 					evt.preventDefault()
-					const response = await fetcher<RouteModel.Auth>(
+
+					HttpService.post<RouteModel.Auth>(
 						'/api/auth/signin',
 						{
 							email,
 							password,
+						},
+						(tokens) => {
+							StoreService.tokens = tokens
 						}
 					)
-
-					console.log(response)
-					if (response.data) {
-						StoreService.tokens = response.data
-						mutate('/api/me')
-					}
 				}}>
 				<Label
 					title='Почта'
