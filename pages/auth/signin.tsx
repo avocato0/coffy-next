@@ -4,7 +4,6 @@ import { StoreService } from 'services/store'
 
 import type { RouteModel } from 'services/api/model'
 import { HttpService } from 'services/http'
-import { StyledButton } from 'components/StyledButton'
 
 const SignIn = () => {
 	const [email, setEmail] = useState<string>('0.snilcy@gmail.com')
@@ -53,14 +52,9 @@ const SignIn = () => {
 						},
 					}}
 				/>
-				<Button
-					type='submit'
-					value='Авторизоваться'
-					disabled={inValid}
-				/>
-				<StyledButton disabled={inValid} type='submit'>
+				<Button disabled={inValid} type='submit'>
 					Авторизоваться
-				</StyledButton>
+				</Button>
 			</Form>
 		</Container>
 	)

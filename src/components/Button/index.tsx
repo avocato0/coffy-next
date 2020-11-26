@@ -1,29 +1,23 @@
-import React, { useState } from 'react'
-import cl from 'classnames'
-import styles from './Button.module.scss'
+import { FC, useState } from 'react'
+import StyledButton, { ANIM_DURATION } from './style'
 
-export interface IButtonProps
-	extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
-
-export const Button: React.FC<IButtonProps> = ({
+export const Button: FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
+	children,
 	type = 'button',
-	value = '',
-	...args
+	...attrs
 }) => {
-	const [clicked, setClicked] = useState<boolean>()
+	const [clicked, setClicked] = useState<boolean>(false)
 
 	return (
-		<button
-			{...args}
-			className={cl(styles.Component, {
-				[styles.ComponentActive]: clicked,
-			})}
-			type={type}
+		<StyledButton
 			onMouseUp={() => {
 				setClicked(true)
-				setTimeout(setClicked, 500)
-			}}>
-			{value}
-		</button>
+				setTimeout(() => setClicked(false), ANIM_DURATION)
+			}}
+			type={type}
+			clicked={clicked}
+			{...attrs}>
+			{children}
+		</StyledButton>
 	)
 }

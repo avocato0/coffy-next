@@ -1,4 +1,7 @@
-.Component {
+import styled, { css } from 'styled-components'
+export const ANIM_DURATION = 250
+
+export default styled.button<{ clicked: boolean }>`
 	display: block;
 	color: var(--color-white);
 	background-color: var(--color-main);
@@ -11,7 +14,16 @@
 	position: relative;
 	z-index: 0;
 
-	&::before {
+	&:hover {
+		opacity: 0.9;
+	}
+
+	&:disabled {
+		pointer-events: none;
+		background-color: var(--color-gray-10);
+	}
+
+	&::after {
 		content: '';
 		position: absolute;
 		left: 50%;
@@ -24,23 +36,14 @@
 		border-radius: inherit;
 		pointer-events: none;
 		opacity: 0.8;
-	}
 
-	&:hover {
-		opacity: 0.9;
+		${(props) =>
+			props.clicked &&
+			css`
+				opacity: 0;
+				transition: all ${ANIM_DURATION / 1000}s ease-out;
+				height: calc(100% + 1.5rem);
+				width: calc(100% + 1.5rem);
+			`}
 	}
-
-	&Active {
-		&::before {
-			opacity: 0;
-			transition: all 0.5s ease-out;
-			height: calc(100% + 1.5rem);
-			width: calc(100% + 1.5rem);
-		}
-	}
-
-	&:disabled {
-		pointer-events: none;
-		background-color: var(--color-gray-10);
-	}
-}
+`
