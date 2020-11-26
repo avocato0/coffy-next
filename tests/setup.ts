@@ -14,11 +14,21 @@ global.fetch = async (path: RequestInfo, req?: RequestInit | undefined) => {
 		status: NaN,
 	}
 
+	const headers: {
+		[key: string]: string
+	} = {}
+	for (let header in req?.headers) {
+		headers[header.toLowerCase()] = (req?.headers as {
+			[key: string]: string
+		})[header]
+	}
+
 	const { default: handler } = require(`../pages${path}`)
 	return new Promise((resolve) => {
 		handler(
 			{
 				body: req?.body ? JSON.parse(req.body as string) : {},
+				headers: req?.headers,
 			},
 			{
 				status(status: number) {

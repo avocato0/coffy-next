@@ -8,25 +8,20 @@ export namespace APIModel {
 		error: Error | null
 	}
 
-	interface Request<T> {
-		body: T
-		accessToken?: TokenModel.Tokens['accessToken']
-	}
-
 	export interface Fetch {
 		path: string
-		request: Request<any>
+		request: any
 		response: Response<any>
 	}
 
 	export interface Route<Path extends string, Req, Resp> extends Fetch {
 		path: Path
-		request: Request<Req>
+		request: Req
 		response: Response<Resp>
 	}
 
 	type HandlerCallback<F extends APIModel.Fetch> = (
-		data: F['request']['body'],
+		data: F['request'],
 		query: NextApiRequest['query'],
 		userId: string
 	) => Promise<F['response']['data']>

@@ -1,5 +1,5 @@
 import httpStatus from 'http-status-codes'
-import useSWR, { mutate } from 'swr'
+import useSWR, { ConfigInterface, mutate } from 'swr'
 
 import { StoreService } from 'services/store'
 import { HttpConstant } from './constant'
@@ -16,18 +16,20 @@ const Mutate: {
 const HttpService = new (class HttpService {
 	fetcher = async <T extends APIModel.Fetch>(
 		path: T['path'],
-		body?: T['request']['body']
+		body: T['request']['body'] = {}
 	): Promise<T['response']> => {
 		try {
 			const response = await fetch(path, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
+					...(StoreService.tokens?.accessToken
+						? {
+								Authorization: `Bearer ${StoreService.tokens?.accessToken}`,
+						  }
+						: {}),
 				},
-				body: JSON.stringify({
-					accessToken: StoreService.tokens?.accessToken,
-					body,
-				}),
+				body: JSON.stringify(body),
 			})
 
 			if (response.status === httpStatus.UNAUTHORIZED) {
@@ -60,8 +62,10 @@ const HttpService = new (class HttpService {
 		return error
 	}
 
-	get = <T extends APIModel.Fetch>(path: T['path']) =>
-		useSWR<T['response']['data'], T['response']['error']>(path)
+	get = <T extends APIModel.Fetch>(
+		path: T['path'],
+		options: ConfigInterface = {}
+	) => useSWR<T['response']['data'], T['response']['error']>(path, options)
 
 	post = async <T extends APIModel.Fetch>(
 		path: T['path'],

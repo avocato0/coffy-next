@@ -10,11 +10,7 @@ const ApiService = new (class ApiService {
 	getApiHandler: APIModel.Hanlder = (callback) => {
 		return async (req, res) => {
 			try {
-				const data = await callback(
-					req.body.body,
-					req.query,
-					req.userId
-				)
+				const data = await callback(req.body, req.query, req.userId)
 
 				if (data) {
 					return res.send({
@@ -42,9 +38,18 @@ const ApiService = new (class ApiService {
 
 	getPrivateApiHandler: APIModel.Hanlder = (callback) => {
 		return async (req, res) => {
-			const { accessToken } = req.body
-
 			try {
+				const { authorization = '' } = req.headers
+				const [type, accessToken] = (authorization as string).split(' ')
+
+				if (type !== 'Bearer' || !accessToken) {
+					res.status(StatusCodes.UNAUTHORIZED)
+					return res.send({
+						data: null,
+						error: new ApiError(StatusCodes.UNAUTHORIZED),
+					})
+				}
+
 				const payload = await AuthService.verify(accessToken)
 				req.userId = payload.id
 				return this.getApiHandler(callback)(req, res)

@@ -9,7 +9,7 @@ const navList = [
 ]
 
 const Navbar = () => {
-	const user = useUser()
+	const { data } = useUser()
 	return (
 		<section className={styles.Container}>
 			<nav>
@@ -25,7 +25,7 @@ const Navbar = () => {
 					})}
 				</ul>
 			</nav>
-			{user.isLoading ? 'Loading...' : user?.data?.name || 'Unknow'}
+			{data?.name}
 		</section>
 	)
 }
